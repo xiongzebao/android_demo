@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import com.blankj.utilcode.util.TimeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemChildLongClickListener;
 import com.example.adapter.ItemAdapter;
 import com.example.adapter.SpaceItemDecoration;
 import com.example.bean.ItemBean;
@@ -176,6 +178,14 @@ public class SignActivity extends AppCompatActivity {
             }
         });
 
+
+      adapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
+          @Override
+          public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+              Intent intent = new Intent(SignActivity.this,SignDetailActivity.class);
+              return false;
+          }
+      });
 
     }
 

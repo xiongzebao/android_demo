@@ -60,7 +60,9 @@ public class MainActivity extends AppCompatActivity {
         mPatternLockView = (PatternLockView) findViewById(R.id.pattern_lock_view);
         mPatternLockView.addPatternLockListener(mPatternLockViewListener);
 
-        startActivity(new Intent(MainActivity.this,SignActivity.class));
+      //  startActivity(new Intent(MainActivity.this,SignActivity.class));
+
+
     }
 
     public void onClick(View view) {

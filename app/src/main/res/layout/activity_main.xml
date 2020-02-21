@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,22 +7,38 @@
     tools:context=".MainActivity">
 
     <com.andrognito.patternlockview.PatternLockView
+        android:visibility="gone"
         android:id="@+id/pattern_lock_view"
-        android:layout_width="280dp"
-        android:layout_height="280dp"
-        app:aspectRatio="square"
-        app:aspectRatioEnabled="true"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        app:aspectRatio="height_bias"
+        app:aspectRatioEnabled="false"
         app:correctStateColor="#ff0000"
-        app:dotAnimationDuration="200"
+        app:dotAnimationDuration="1000"
         app:dotCount="3"
         app:dotNormalSize="12dp"
         app:dotSelectedSize="24dp"
         app:normalStateColor="#0000ff"
-        app:pathEndAnimationDuration="100"
+        app:pathEndAnimationDuration="50"
         app:pathWidth="4dp"
         app:wrongStateColor="@color/pomegranate"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="75dp"
         tools:layout_editor_absoluteY="204dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.example.android_demo.MyViewGroup
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:background="@color/colorPrimary">
+
+        <com.example.android_demo.MyView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/holo_red_dark" />
+    </com.example.android_demo.MyViewGroup>
+
+
+
+</FrameLayout>
