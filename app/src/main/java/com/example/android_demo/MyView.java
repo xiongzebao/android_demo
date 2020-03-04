@@ -8,22 +8,23 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.os.Debug;
 import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.andrognito.patternlockview.PatternLockView;
 
 import java.util.ArrayList;
 
-public class MyView extends View {
+public class MyView extends View implements ScaleGestureDetector.OnScaleGestureListener {
+    private static final int  SCALE = 1;
 
     private Paint mDotPaint;
     private Paint mPathPaint;
@@ -36,6 +37,22 @@ public class MyView extends View {
     private float scaleX;
     private float scaleY;
 
+    private float scaleTemp = 1;
+
+    private ScaleGestureDetector scaleGestureDetector;
+    Handler handler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case SCALE:
+                    setScaleX((Float) msg.obj);
+                    setScaleY((Float) msg.obj);
+                    break;
+            }
+
+        }
+    };
 
 
     public MyView(Context context) {
@@ -53,53 +70,58 @@ public class MyView extends View {
         initView();
     }
 
-    private void initView(){
+    private void initView() {
         initDotPaint();
         initPathPaint();
         initAnimator();
 
+        scaleGestureDetector = new ScaleGestureDetector(getContext(), this);
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startSizeAnimation(10,500,3000,mLinearOutSlowInInterpolator,Dot.dots.get(2),new Runnable(){
+           /*     startSizeAnimation(10, 500, 3000, mLinearOutSlowInInterpolator, Dot.dots.get(2), new Runnable() {
 
                     @Override
                     public void run() {
 
                     }
-                });
+                });*/
+
+                //setScaleX(15.5f);
+               // setScaleY(15.5f);
             }
-        },2000);
+        }, 2000);
+
+
 
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        Log.e("xiong","w:"+w+"h:"+h);
-        initDot(w,h);
+        Log.e("xiong", "w:" + w + "h:" + h);
+        initDot(w, h);
 
     }
 
 
-
-
-    private void initDot(int w,int h){
+    private void initDot(int w, int h) {
         Dot.clearDots();
-        for (int i=0;i<500;i++){
-          int x = (int) (Math.random()*w);
-          int y = (int) (Math.random()*h);
-          Dot.addDot(x,y);
+        for (int i = 0; i < 500; i++) {
+            int x = (int) (Math.random() * w);
+            int y = (int) (Math.random() * h);
+            Dot.addDot(x, y);
         }
     }
 
-    private void initDotPaint(){
+    private void initDotPaint() {
         mDotPaint = new Paint();
         mDotPaint.setAntiAlias(true);
         mDotPaint.setDither(true);
     }
 
-    private void initPathPaint(){
+    private void initPathPaint() {
         mPathPaint = new Paint();
         mPathPaint.setAntiAlias(true);
         mPathPaint.setDither(true);
@@ -111,7 +133,7 @@ public class MyView extends View {
     }
 
 
-    private void initAnimator(){
+    private void initAnimator() {
         mLinearOutSlowInInterpolator = AnimationUtils.loadInterpolator(
                 getContext(), android.R.interpolator.linear_out_slow_in);
     }
@@ -122,10 +144,8 @@ public class MyView extends View {
 
         canvas.drawCircle(centerX, centerY, size / 2, mDotPaint);
 
-       // canvas.drawText();
+        // canvas.drawText();
     }
-
-
 
 
     private void startSizeAnimation(int start, int end, long duration,
@@ -136,7 +156,7 @@ public class MyView extends View {
 
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                dot.size = (int)animation.getAnimatedValue();
+                dot.size = (int) animation.getAnimatedValue();
                 invalidate();
             }
 
@@ -161,7 +181,7 @@ public class MyView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        switch (event.getAction()) {
+   /*     switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 handleActionDown(event);
                 return true;
@@ -174,23 +194,22 @@ public class MyView extends View {
             case MotionEvent.ACTION_CANCEL:
 
                 return true;
-        }
+        }*/
 
-        return true;
+        return scaleGestureDetector.onTouchEvent(event);
     }
 
-    private void handleActionMove(MotionEvent e){
-
-    }
-
-    private void handleActionUp(MotionEvent e){
+    private void handleActionMove(MotionEvent e) {
 
     }
 
+    private void handleActionUp(MotionEvent e) {
 
-    private void handleActionDown(MotionEvent e){
-        setScaleX(++scaleX);
-        setScaleY(++scaleY);
+    }
+
+
+    private void handleActionDown(MotionEvent e) {
+
     }
 
 
@@ -198,18 +217,13 @@ public class MyView extends View {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
 
-        Log.e("xiong","MyView onLayout");
+
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
 
-
-        Log.e("xiong","MyView getSuggestedMinimumWidth:"+getSuggestedMinimumWidth());
-       // MyUtils.printMode(MeasureSpec.getMode(widthMeasureSpec));
-     //   Log.e("xiong","MyView heightMeasureSpec");
-     //   MyUtils.printMode(MeasureSpec.getMode(heightMeasureSpec));
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
@@ -221,33 +235,69 @@ public class MyView extends View {
 
     }
 
-    private void drawLine(Canvas canvas){
-        Path path  = new Path();
+    private void drawLine(Canvas canvas) {
+        Path path = new Path();
         path.lineTo(200, 200);                      // lineTo
-        path.setLastPoint(200,50);                 // setLastPoint
+        path.setLastPoint(200, 50);                 // setLastPoint
         //  path.lineTo(200,0);
-        canvas.drawPath(path,mPathPaint);
+        canvas.drawPath(path, mPathPaint);
     }
 
 
-
-    private void drawDots(Canvas canvas){
-        for (Dot dot :Dot.dots){
-            drawDot(canvas,dot.x,dot.y,dot.size,normalColor);
+    private void drawDots(Canvas canvas) {
+        for (Dot dot : Dot.dots) {
+            drawDot(canvas, dot.x, dot.y, dot.size, normalColor);
         }
     }
 
+    @Override
+    public boolean onScale(ScaleGestureDetector scaleGestureDetector) {
 
-    private static class Dot{
+        float x = scaleGestureDetector.getFocusX();
+        float y = scaleGestureDetector.getFocusY();
 
-        public static   ArrayList<Dot> dots = new ArrayList<>();
+     /*   Log.e("xiong", "focusX:" + x);
+        Log.e("xiong", "focusY:" + y);*/
+        Log.e("xiong", "ScaleFactor:" + scaleGestureDetector.getScaleFactor());
+        float factor =  scaleGestureDetector.getScaleFactor();
 
-        public static void clearDots(){
+        factor = scaleTemp *factor;
+        scaleTemp= factor;
+
+       // setScaleY(factor);
+       // setScaleX(factor);
+       // scaleTemp=factor;
+
+
+        Message message = Message.obtain();
+        message.what = SCALE;
+        message.obj = scaleGestureDetector.getCurrentSpan()/60;
+        handler.sendMessage(message);
+
+        return false;
+    }
+
+    @Override
+    public boolean onScaleBegin(ScaleGestureDetector scaleGestureDetector) {
+        Log.e("xiong", "onScaleBegin");
+        return true;
+    }
+
+    @Override
+    public void onScaleEnd(ScaleGestureDetector scaleGestureDetector) {
+        Log.e("xiong", "onScaleEnd");
+       // scaleTemp = scaleGestureDetector.getScaleFactor();
+    }
+
+
+    private static class Dot {
+        public static ArrayList<Dot> dots = new ArrayList<>();
+
+        public static void clearDots() {
             dots.clear();
         }
 
-
-        public static void addDot(int x,int y){
+        public static void addDot(int x, int y) {
             Dot dot = new Dot();
             dot.x = x;
             dot.y = y;
@@ -256,8 +306,8 @@ public class MyView extends View {
 
         public int x;
         public int y;
-        public  int size=10;
-        public int alpha=1;
+        public int size = 10;
+        public int alpha = 1;
         public String text;
     }
 

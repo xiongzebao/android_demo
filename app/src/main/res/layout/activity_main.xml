@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <com.example.android_demo.MapContainer
+        android:id="@+id/mc_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:marker_anim_duration="1200"
+        app:marker_height="94px"
+        app:marker_width="66px" />
+
+
+
     <com.andrognito.patternlockview.PatternLockView
         android:visibility="gone"
         android:id="@+id/pattern_lock_view"
@@ -27,18 +37,22 @@
         tools:layout_editor_absoluteY="204dp" />
 
 
-    <com.example.android_demo.MyViewGroup
+ <!--   <com.example.android_demo.MyViewGroup
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:background="@color/colorPrimary">
 
-        <com.example.android_demo.MyView
+      &lt;!&ndash;  <com.example.android_demo.MyView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/holo_red_dark" />
+            android:background="@android:color/holo_red_dark" />&ndash;&gt;
+&lt;!&ndash;
+        <com.example.android_demo.GameView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>&ndash;&gt;
     </com.example.android_demo.MyViewGroup>
-
+-->
 
 
 </FrameLayout>
